@@ -18,10 +18,13 @@ class account
   friend std::ostream& operator<<(std::ostream &out, account& acc);
   const std::string& get_number() const;
   void set_number(const std::string& number);
+  void find_last_date();
+  std::string get_date(const std::string& filename) const;
 
  private:
   std::string number_str;
   std::string broker;
+  std::string last_date;
   std::vector<std::string> filenames;
 };
 

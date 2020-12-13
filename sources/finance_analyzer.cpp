@@ -48,9 +48,9 @@ void finance_analyzer::analyze(const filesystem::path& path)
         current_account->add_filename(current_filename);
         accounts.push_back(current_account);
       }
+    }
   }
-
-  }
+  for (auto acc : accounts ) acc->find_last_date();
 }
 
 finance_analyzer::~finance_analyzer(){
@@ -76,7 +76,7 @@ std::ostream& operator<<(std::ostream& out, finance_analyzer& fin)
   //return fin.print_info(out);
 }
 std::string finance_analyzer::filename_number(const std::string& filename) const {
-  std::string number_str = filename.substr(filename.find('_') + 1, filename.size()-1);
+  std::string number_str = filename.substr(filename.find('_') + 1, filename.size() - 1);
   number_str = number_str.substr(0, number_str.find('_'));
   return number_str;
 }
