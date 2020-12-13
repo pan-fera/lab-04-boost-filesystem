@@ -15,12 +15,11 @@ class finance_analyzer {
   explicit finance_analyzer();
   void analyze(const filesystem::path& path);
   std::ostream& print_info(std::ostream& out);
-
-  std::string filename_number (const std::string& filename) const;
-
+  std::string filename_number(const std::string& filename) const;
+  void parse_directory(const filesystem::path& p,
+                       const std::string& current_broker);
   friend std::ostream& operator<<(std::ostream &out, finance_analyzer& fin);
   ~finance_analyzer();
-
 
  private:
   filesystem::path path_to_ftp;

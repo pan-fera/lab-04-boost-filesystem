@@ -26,6 +26,7 @@ std::ostream& operator<<(std::ostream& out, account& acc) {
 std::ostream& account::print_info(std::ostream& out) {
   return out;
 }
+
 void account::find_last_date()
 {
   last_date = get_date(filenames[0]);
