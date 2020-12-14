@@ -33,19 +33,15 @@ find_package(GTest CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
   # enum your files and delete this comment
-        sources/finance_analyzer.cpp
-        include/finance_analyzer.hpp
-        sources/account.cpp
-        include/account.hpp)
+        sources/Filesystem.cpp
+        include/Filesystem.hpp)
 
 target_link_libraries(${PROJECT_NAME} Boost::filesystem)
 
 add_executable(demo
   ${CMAKE_CURRENT_SOURCE_DIR}/demo/main.cpp
-        sources/finance_analyzer.cpp
-        include/finance_analyzer.hpp
-        sources/account.cpp
-        include/account.hpp)
+        sources/Filesystem.cpp
+        include/Filesystem.hpp)
 
 
 target_include_directories(${PROJECT_NAME} PUBLIC
