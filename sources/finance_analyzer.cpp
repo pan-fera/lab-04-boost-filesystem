@@ -13,13 +13,18 @@ std::ostream& finance_analyzer::print_info(std::ostream& out)
 void finance_analyzer::analyze(const filesystem::path& path)
 {
   path_to_ftp = path;
+  if (!filesystem::exists(path_to_ftp))
+    throw std::string ("Error: no such directory");
+  if (!filesystem::is_directory(path_to_ftp))
+    throw std::string ("Error: given argument is not a directory");
   for (const auto &broker_directory : filesystem::directory_iterator(path_to_ftp))
   {
     if (!filesystem::is_directory(broker_directory)) continue;
     std::string current_broker = broker_directory.path().filename().string();
+    if (current_broker == "docs") continue;
     for (const auto &iter : filesystem::directory_iterator(broker_directory))
     {
-      parse_directory(iter.path(), current_broker);
+      parse_component(iter.path(), current_broker);
     }
   }
   for (auto acc : accounts ) acc->find_last_date();
@@ -54,18 +59,18 @@ std::string finance_analyzer::filename_number(const std::string& filename) const
   return number_str;
 }
 
-void finance_analyzer::parse_directory(
+void finance_analyzer::parse_component(
     const filesystem::path& p,
     const std::string& current_broker)
 {
-  // let all components have correct names
-  filesystem::path component = p;
-  if (filesystem::is_symlink(p))
-    if (filesystem::is_regular_file(filesystem::read_symlink(p)))
-      component = filesystem::read_symlink(p);
-  if (filesystem::is_regular_file(component))
+  // let all files have correct names
+  filesystem::path component_path = p;
+  if (filesystem::is_symlink(p)) component_path = filesystem::read_symlink(p);
+  if (!filesystem::exists(component_path)) return;
+  if (filesystem::is_regular_file(component_path))
   {
-    std::string current_filename = component.filename().string();
+    if (!filename_is_valid(component_path)) return;
+    std::string current_filename = component_path.filename().string();
     account* current_account = nullptr;
     for (auto acc : accounts )
     {
@@ -85,15 +90,34 @@ void finance_analyzer::parse_directory(
       current_account->add_filename(current_filename);
       accounts.push_back(current_account);
     }
-  } else {
-    filesystem::path sub_path;
-    if (filesystem::is_directory(component)){
-      sub_path = component;
-    }
-    if (filesystem::is_symlink(component)){
-      sub_path = filesystem::read_symlink(component);
-    }
-    for (const auto& sub_component_path : filesystem::directory_iterator(sub_path))
-      parse_directory(sub_component_path, current_broker);
+  } else if (filesystem::is_directory(component_path)) {
+    for (const auto& sub_component : filesystem::directory_iterator(component_path))
+      parse_component(sub_component.path(), current_broker);
   }
+}
+
+bool finance_analyzer::filename_is_valid(const filesystem::path& path_to_file) {
+  if (path_to_file.extension() != ".txt") return false;
+  else if (path_to_file.stem().has_extension())
+    return false;
+  std::string filename = path_to_file.stem().filename().string();
+  size_t underscore_pos = filename.find('_');
+  std::string tmp;
+  if (underscore_pos) tmp = filename.substr(0, underscore_pos);
+  else return false;
+  if (tmp != "balance") return false;
+  filename = filename.substr(underscore_pos + 1, filename.size());
+  underscore_pos = filename.find('_');
+  if (!underscore_pos) return false;
+  else {
+    tmp = filename.substr(0, underscore_pos);
+    //std::cout << tmp << "///" ;
+    if (tmp.size() != 8) return false;
+    if (tmp.find_first_not_of("0123456789") != std::string::npos) return false;
+    tmp = filename.substr( underscore_pos + 1, filename.size());
+    if (tmp.size() != 8) return false;
+    //std::cout << tmp << std::endl;
+    if (tmp.find_first_not_of("0123456789") != std::string::npos) return false;
+  }
+  return true;
 }
