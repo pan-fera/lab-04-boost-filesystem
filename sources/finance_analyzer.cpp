@@ -10,19 +10,19 @@ std::ostream& finance_analyzer::print_info(std::ostream& out)
   return out;
 }
 
-void finance_analyzer::analyze(const filesystem::path& path)
+void finance_analyzer::analyze(const fs::path& path)
 {
   path_to_ftp = path;
-  if (!filesystem::exists(path_to_ftp))
+  if (!fs::exists(path_to_ftp))
     throw std::string ("Error: no such directory");
-  if (!filesystem::is_directory(path_to_ftp))
+  if (!fs::is_directory(path_to_ftp))
     throw std::string ("Error: given argument is not a directory");
-  for (const auto &broker_directory : filesystem::directory_iterator(path_to_ftp))
+  for (const auto &broker_directory : fs::directory_iterator(path_to_ftp))
   {
-    if (!filesystem::is_directory(broker_directory)) continue;
+    if (!fs::is_directory(broker_directory)) continue;
     std::string current_broker = broker_directory.path().filename().string();
     if (current_broker == "docs") continue;
-    for (const auto &iter : filesystem::directory_iterator(broker_directory))
+    for (const auto &iter : fs::directory_iterator(broker_directory))
     {
       parse_component(iter.path(), current_broker);
     }
@@ -53,21 +53,23 @@ std::ostream& operator<<(std::ostream& out, finance_analyzer& fin)
   //return fin.print_info(out);
 }
 
-std::string finance_analyzer::filename_number(const std::string& filename) const {
-  std::string number_str = filename.substr(filename.find('_') + 1, filename.size() - 1);
+std::string finance_analyzer::filename_number(const std::string& filename) const
+{
+  std::string number_str = filename.substr(filename.find('_') + 1,
+                                           filename.size() - 1);
   number_str = number_str.substr(0, number_str.find('_'));
   return number_str;
 }
 
 void finance_analyzer::parse_component(
-    const filesystem::path& p,
+    const fs::path& p,
     const std::string& current_broker)
 {
   // let all files have correct names
-  filesystem::path component_path = p;
-  if (filesystem::is_symlink(p)) component_path = filesystem::read_symlink(p);
-  if (!filesystem::exists(component_path)) return;
-  if (filesystem::is_regular_file(component_path))
+  fs::path component_path = p;
+  if (fs::is_symlink(p)) component_path = fs::read_symlink(p);
+  if (!fs::exists(component_path)) return;
+  if (fs::is_regular_file(component_path))
   {
     if (!filename_is_valid(component_path)) return;
     std::string current_filename = component_path.filename().string();
@@ -90,13 +92,13 @@ void finance_analyzer::parse_component(
       current_account->add_filename(current_filename);
       accounts.push_back(current_account);
     }
-  } else if (filesystem::is_directory(component_path)) {
-    for (const auto& sub_component : filesystem::directory_iterator(component_path))
+  } else if (fs::is_directory(component_path)) {
+    for (const auto& sub_component : fs::directory_iterator(component_path))
       parse_component(sub_component.path(), current_broker);
   }
 }
 
-bool finance_analyzer::filename_is_valid(const filesystem::path& path_to_file) {
+bool finance_analyzer::filename_is_valid(const fs::path& path_to_file) {
   if (path_to_file.extension() != ".txt") return false;
   else if (path_to_file.stem().has_extension())
     return false;

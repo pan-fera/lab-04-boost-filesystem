@@ -37,7 +37,8 @@ void account::find_last_date()
   }
 }
 std::string account::get_date(const std::string& filename) const {
-  std::string date = filename.substr(filename.find('_') + 1, filename.find('.'));
+  std::string date = filename.substr(filename.find('_') + 1,
+                                     filename.find('.'));
   date = date.substr(date.find('_') + 1, date.size()-1);
   return date;
   //return filename;

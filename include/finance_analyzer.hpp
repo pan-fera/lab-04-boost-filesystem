@@ -9,21 +9,22 @@
 #include "account.hpp"
 #include "boost/filesystem.hpp"
 
-using namespace boost;
+//using namespace boost;
+namespace fs = boost::filesystem;
 class finance_analyzer {
  public:
   explicit finance_analyzer();
-  void analyze(const filesystem::path& path);
+  void analyze(const fs::path& path);
   std::ostream& print_info(std::ostream& out);
   std::string filename_number(const std::string& filename) const;
-  void parse_component(const filesystem::path& p,
+  void parse_component(const fs::path& p,
                        const std::string& current_broker);
-  bool filename_is_valid(const filesystem::path& path_to_file);
+  bool filename_is_valid(const fs::path& path_to_file);
   friend std::ostream& operator<<(std::ostream &out, finance_analyzer& fin);
   ~finance_analyzer();
 
  private:
-  filesystem::path path_to_ftp;
+  fs::path path_to_ftp;
   std::vector<account*> accounts;
 };
 #endif  // TEMPLATE_FINANCE_ANALYZER_HPP
