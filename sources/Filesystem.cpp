@@ -11,8 +11,8 @@ Filesystem::Filesystem(const std::string path_to_file){
     std::cout<<_path_to_ftp<<std::endl;
     if(is_symlink(_path_to_ftp))
         _path_to_ftp=read_symlink(_path_to_ftp);
-    //if(!is_directory(_path_to_ftp))
-      //  throw std::runtime_error("This path is not directory");
+    if(!is_directory(_path_to_ftp))
+        throw std::runtime_error("This path is not directory");
 }
 
 void Filesystem::all_path(path p, std::ostream &out) {
