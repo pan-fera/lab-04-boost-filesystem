@@ -8,7 +8,7 @@ TEST(Example, EmptyTest) {
 
 TEST(Programm, WorkTest) {
     std::cout<<boost::filesystem::current_path()<<std::endl;
-    Filesystem test("misc/ftp");
+    Filesystem test("../misc/ftp");
     std::cout<<test;
     EXPECT_TRUE(true);
 }
