@@ -3,7 +3,7 @@
 //
 #include "Filesystem.hpp"
 #include <iostream>
-#include <algorithm>
+//#include <algorithm>
 
 using namespace  boost::filesystem;
 Filesystem::Filesystem(const std::string path_to_file){
@@ -40,7 +40,7 @@ bool Filesystem::handler(path p, std::ostream &out) {
         return false;
 }
 
-bool Filesystem::check_fiilename(boost::filesystem::path p){
+bool Filesystem::check_fiilename(path p){
     if(p.extension()==".txt" && p.filename().size() == len_namefile &&
        p.filename().string().substr(0, 7)=="balance")
         return true;
@@ -76,6 +76,7 @@ std::string Filesystem::what_data(std::string p){
 }
 
 std::string Filesystem::what_broker(boost::filesystem::path p){
+    p = absolute(p);
     std::size_t iterator2 = p.string().find_last_of('/');
     if(iterator2 == std::string::npos) return std::string();
     --iterator2;
@@ -93,8 +94,8 @@ void Filesystem::insert_element(std::string account, std::string data,
     std::vector<std::string>::iterator it = std::find(_account.begin(),
                                                       _account.end(),
                                                       account);
-    std::vector<std::string>::difference_type index = std::distance(_account.begin(),
-                                                                    it);
+    std::vector<std::string>::difference_type index = std::distance
+        (_account.begin(), it);
     if(_account.size() == (size_t) index) {
         _account.push_back(account);
         _broker.push_back(broker);
@@ -112,8 +113,8 @@ void Filesystem::insert_element(std::string account, std::string data,
 
 void Filesystem::show_account(std::ostream &out){
     for (size_t i = 0; i < _account.size(); ++i){
-        out << "broker:" << _broker[i] << " account:" << _account[i] << " files:" <<
-            _files[i] << " lastdate:" << _lastdate[i] << std::endl;
+        out << "broker:" << _broker[i] << " account:" << _account[i] <<
+          " files:" << _files[i] << " lastdate:" << _lastdate[i] << std::endl;
     }
 }
 
@@ -122,4 +123,3 @@ std::ostream& operator<<(std::ostream &out,  Filesystem& file_system) {
     file_system.show_account(out);
     return out;
 }
-//TODO: перегруженный оператор вывода, исключения, символьная ссылка, main

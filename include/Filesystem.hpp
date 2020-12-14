@@ -1,14 +1,12 @@
 //
 // Created by hacker on 12.12.2020.
 //
-
 #ifndef TEMPLATE_FILESYSTEM_HPP
 #define TEMPLATE_FILESYSTEM_HPP
 #include <boost/filesystem.hpp>
 #include <vector>
 class Filesystem {
 public:
-    //Filesystem();
     Filesystem(const std::string path_to_file);
     void all_path(boost::filesystem::path p, std::ostream &out);
     bool handler(boost::filesystem::path p, std::ostream &out);

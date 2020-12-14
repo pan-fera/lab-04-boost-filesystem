@@ -7,7 +7,6 @@ TEST(Example, EmptyTest) {
 }
 
 TEST(Programm, WorkTest) {
-    std::cout<<boost::filesystem::current_path()<<std::endl;
     try {
       std::string path("../misc/ftp");
       Filesystem test(path);
