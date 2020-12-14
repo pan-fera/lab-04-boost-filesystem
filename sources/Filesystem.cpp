@@ -6,7 +6,7 @@
 #include <algorithm>
 
 using namespace  boost::filesystem;
-Filesystem::Filesystem(std::string path_to_file){
+Filesystem::Filesystem(const std::string path_to_file){
     _path_to_ftp = path(path_to_file);
     std::cout<<_path_to_ftp<<std::endl;
     if(is_symlink(_path_to_ftp))

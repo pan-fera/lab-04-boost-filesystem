@@ -9,7 +9,7 @@
 class Filesystem {
 public:
     //Filesystem();
-    Filesystem(std::string path_to_file);
+    Filesystem(const std::string path_to_file);
     void all_path(boost::filesystem::path p, std::ostream &out);
     bool handler(boost::filesystem::path p, std::ostream &out);
     bool check_fiilename(boost::filesystem::path p);
