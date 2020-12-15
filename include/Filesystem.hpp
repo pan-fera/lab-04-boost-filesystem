@@ -25,6 +25,7 @@ private:
     std::vector<long int> _lastdate;
 
     const size_t len_namefile = 29;
+    const std::string _numbers = "0123456789";
 };
 
 #endif  // TEMPLATE_FILESYSTEM_HPP

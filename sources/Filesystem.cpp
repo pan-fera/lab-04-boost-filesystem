@@ -3,7 +3,7 @@
 //
 #include "Filesystem.hpp"
 #include <iostream>
-//#include <algorithm>
+#include <algorithm>
 
 using namespace  boost::filesystem;
 Filesystem::Filesystem(const std::string path_to_file){
@@ -23,6 +23,7 @@ void Filesystem::all_path(path p, std::ostream &out) {
             handler(x.path(), out);
     }
 }
+
 bool Filesystem::handler(path p, std::ostream &out) {
     if(check_fiilename(p)) {
         std::string file_name = p.filename().string();
@@ -41,8 +42,11 @@ bool Filesystem::handler(path p, std::ostream &out) {
 }
 
 bool Filesystem::check_fiilename(path p){
-    if(p.extension()==".txt" && p.filename().size() == len_namefile &&
-       p.filename().string().substr(0, 7)=="balance")
+  const std::string _txt = ".txt";
+  const std::string _balance = "balance";
+
+    if(p.extension()==_txt && p.filename().size() == len_namefile &&
+       p.filename().string().substr(0, 7)==_balance)
         return true;
     else
         return false;
@@ -56,7 +60,7 @@ std::string Filesystem::what_account(std::string p){
     if(iterator2 == std::string::npos) return std::string();
     std::string account = p.substr(iterator1, iterator2-iterator1);
 
-    if(account.find_first_not_of("0123456789",0) != std::string::npos)
+    if(account.find_first_not_of(_numbers,0) != std::string::npos)
         return std::string();
 
     return account;
@@ -70,12 +74,12 @@ std::string Filesystem::what_data(std::string p){
     if(iterator2 == std::string::npos) return std::string();
     std::string data = p.substr(iterator1, iterator2-iterator1);
 
-    if(data.find_first_not_of("0123456789",0) != std::string::npos)
+    if(data.find_first_not_of(_numbers,0) != std::string::npos)
         return std::string();
     return data;
 }
 
-std::string Filesystem::what_broker(boost::filesystem::path p){
+std::string Filesystem::what_broker(path p){
     p = absolute(p);
     std::size_t iterator2 = p.string().find_last_of('/');
     if(iterator2 == std::string::npos) return std::string();
